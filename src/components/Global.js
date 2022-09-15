@@ -1,6 +1,4 @@
 import { createGlobalStyle } from "styled-components";
-import { UserContext } from "./Context";
-import { useContext } from "react";
 const Global = createGlobalStyle`
     *{
         box-sizing:border-box;
@@ -13,9 +11,8 @@ const Global = createGlobalStyle`
         width: 100vw;
         height: 100vh;
         font-family: 'Inter', sans-serif;
-        /* background-color: ${(props) => (props.theme ? 'var(--color-letters)' : 'var(--color-background)')} */ 
-        /* font-family: 'Dancing Script', cursive; */
-        background-color: var(--color-background)
+        background-color: ${(props) => (props.theme ? 'var(--color-letters)' : 'var(--color-background)')};
+        color: ${(props) => (props.theme ? 'var(--color-background)' : 'var(--color-letters)')}       
     }
 
     @media (max-width: 390px) {
