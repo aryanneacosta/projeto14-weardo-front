@@ -1,55 +1,65 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { getProducts } from "../services/Services";
+import ecommerce from '../assets/images/ecommerce.png';
+import banner from '../assets/images/banner.png';
 
 export default function Main() {
+    const [productsList, setProductsList] = useState([]);
+    const auth = JSON.parse(localStorage.getItem('weardo'));
+    let newProductsList = [];
+
+    useEffect(() => {
+        gettingList();
+    }, []);
+
+    async function gettingList() {
+        await getProducts().then(resposta => {
+            setProductsList(resposta.data);
+        }).catch(resposta => {
+            console.log(resposta.data);
+        })
+    }
+
+    decimalSeparator(productsList);
+    
+    function decimalSeparator(arr) {
+        arr.forEach(item => {
+            item.price = (parseInt(item.price)/100).toFixed(2);
+        })
+        return newProductsList = arr;
+    }
+
     return (
         <Content>
             <Header>
-                <Delivery>
-                    Delivery adress
-                    <div>rua blabla</div>
-                </Delivery>
+                <Welcome>
+                    <img src={ecommerce} alt='logo'/>
+                    Bem vindo(a),
+                    <div>{auth.name}</div>
+                    !
+                </Welcome>
                 <ion-icon name="cart-outline"></ion-icon>
             </Header>
             <Poster>
-                <img src="https://www.casamagalhaes.com.br/blog/wp-content/uploads/2017/09/como-fazer-uma-promo%C3%A7%C3%A3o.jpg" alt="poster"/>
+                <img src={banner} alt="poster" />
             </Poster>
+            <News>Confira as novidades:</News>
             <Products>
-                <Product>
-                    <img src="https://lojista.imaginariumnamedida.com.br/media/wysiwyg/inicio/NaMedida/luminaria_onoff.jpg" alt="produto"/>
-                    <h2>Nome do produto</h2>
-                    <h3>R$ preço</h3>
-                    <div>Adicionar ao carrinho</div>
-                </Product>
-                <Product>
-                    <img src="https://lojista.imaginariumnamedida.com.br/media/wysiwyg/inicio/NaMedida/luminaria_onoff.jpg" alt="produto"/>
-                    <h2>Nome do produto</h2>
-                    <h3>R$ preço</h3>
-                    <div>Adicionar ao carrinho</div>
-                </Product>
-                <Product>
-                    <img src="https://lojista.imaginariumnamedida.com.br/media/wysiwyg/inicio/NaMedida/luminaria_onoff.jpg" alt="produto"/>
-                    <h2>Nome do produto</h2>
-                    <h3>R$ preço</h3>
-                    <div>Adicionar ao carrinho</div>
-                </Product>
-                <Product>
-                    <img src="https://lojista.imaginariumnamedida.com.br/media/wysiwyg/inicio/NaMedida/luminaria_onoff.jpg" alt="produto"/>
-                    <h2>Nome do produto</h2>
-                    <h3>R$ preço</h3>
-                    <div>Adicionar ao carrinho</div>
-                </Product>
-                <Product>
-                    <img src="https://lojista.imaginariumnamedida.com.br/media/wysiwyg/inicio/NaMedida/luminaria_onoff.jpg" alt="produto"/>
-                    <h2>Nome do produto</h2>
-                    <h3>R$ preço</h3>
-                    <div>Adicionar ao carrinho</div>
-                </Product>
-                <Product>
-                    <img src="https://lojista.imaginariumnamedida.com.br/media/wysiwyg/inicio/NaMedida/luminaria_onoff.jpg" alt="produto"/>
-                    <h2>Nome do produto</h2>
-                    <h3>R$ preço</h3>
-                    <div>Adicionar ao carrinho</div>
-                </Product>
+                {newProductsList.map((products, index) => {
+                    return (
+                        <Product key={index}>
+                            <Image>
+                                <img src={products.image} alt="produto" />
+                            </Image>
+                            <ProductName>
+                                <h2>{products.name}</h2>
+                            </ProductName>
+                            <h3>R$ {products.price}</h3>
+                            <Button>Adicionar ao carrinho</Button>
+                        </Product>
+                    )
+                })}
             </Products>
         </Content>
     )
@@ -58,7 +68,6 @@ export default function Main() {
 const Content = styled.div`
     display: flex;
     justify-content: center;
-    align-items: center;
     flex-direction: column;
     font-family: "Inter", sans-serif;
     font-family: "Dancing Script", cursive;
@@ -83,17 +92,24 @@ const Header = styled.div`
     }
 `;
 
-const Delivery = styled.div`
+const Welcome = styled.div`
     display: flex;
-    flex-direction: column;
-    font-size: 10px;
+    align-items: center;
+    font-size: 15px;
     font-family: 'Inter';
-    margin-left: 20px;
+    color: #393F42;
+    margin-left: 16px;
 
     div {
         font-family: 'Inter';
-        font-size: 12px;
-        font-weight: 500;
+        font-size: 16px;
+        font-weight: 700;
+        color: #393F42;
+        margin-left: 5px;
+    }
+
+    img {
+        height: 28px;
     }
 `;
 
@@ -107,15 +123,23 @@ const Poster = styled.div`
 
     img {
         height: 144px;
-        width: 90%;
+        width: 80%;
         border-radius: 10px;
+        object-fit: fill;
     }
+`;
+
+const News = styled.div`
+    margin-left: 16px;
+    font-family: 'Inter';
+    font-size: 14px;
+    color: #393F42;
 `;
 
 const Products = styled.div`
     display: flex;
     flex-wrap: wrap;
-    width: 350px;
+    margin-left: 14px;
 `;
 
 const Product = styled.div`
@@ -123,20 +147,7 @@ const Product = styled.div`
     width: 170px;
     display: flex;
     flex-direction: column;
-
-    img {
-        height: 112px;
-        width: 170px;
-        border-radius: 6px;
-    }
-
-    h2 {
-        font-size: 12px;
-        font-family: 'Inter';
-        color: #393F42;
-        margin-top: 13px;
-        margin-left: 14px;
-    }
+    margin-bottom: 10px;
 
     h3 {
         font-size: 14px;
@@ -147,18 +158,42 @@ const Product = styled.div`
         margin-bottom: 11px;
         margin-left: 14px;
     }
+`;
 
-    div {
-        height: 31px;
-        width: 144px;
-        margin-left: 14px;
-        background-color: var(--color-buttons);
-        border-radius: 4px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 12px;
-        color: var(--color-background);
-        font-family: 'Inter';
+const Image = styled.div`
+    height: 112px;
+    width: 170px;
+
+    img {
+        object-fit: contain;
+        height: 112px;
+        width: 170px;
     }
+`;
+
+const ProductName = styled.div`
+    height: 35px;
+    width: 165px;
+    margin-top: 13px;
+    margin-left: 14px;
+
+    h2 {
+        font-size: 12px;
+        font-family: 'Inter';
+        color: #393F42; 
+    }
+`;
+
+const Button = styled.div`
+    height: 31px;
+    width: 144px;
+    margin-left: 14px;
+    background-color: var(--color-buttons);
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    color: var(--color-background);
+    font-family: 'Inter';
 `;
