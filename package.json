@@ -4,12 +4,12 @@
   "private": true,
   "dependencies": {
     "axios": "^0.27.2",
-    "create-react-app": "^5.0.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.0",
-    "react-scripts": "^4.0.3",
-    "styled-components": "^5.3.5"
+    "react-scripts": "^5.0.1",
+    "styled-components": "^5.3.5",
+    "styled-reset": "^4.4.2"
   },
   "scripts": {
     "start": "react-scripts start",
