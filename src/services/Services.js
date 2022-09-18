@@ -2,6 +2,16 @@ import axios from "axios";
 
 const BASE_URL = `http://localhost:5000`;
 
+function creatingHeaders() {
+  const auth = JSON.parse(localStorage.getItem('weardo'));
+  const header = {
+    headers: {
+      Authorization: `Bearer ${auth.token}`
+    }
+  }
+  return header;
+}
+
 function singin(body) {
   const promisse = axios.post(`${BASE_URL}/singin`, body);
   return promisse;
@@ -12,4 +22,10 @@ function singup(body) {
   return promisse;
 }
 
-export { singin, singup };
+function getProducts() {
+  const header = creatingHeaders();
+  const promise = axios.get(`${BASE_URL}/products`, header);
+  return promise;
+}
+
+export { singin, singup, getProducts };
