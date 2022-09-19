@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = `http://localhost:5000`;
+const BASE_URL = `https://weardo.herokuapp.com`;
 
 function creatingHeaders() {
   const auth = JSON.parse(localStorage.getItem('weardo'));
