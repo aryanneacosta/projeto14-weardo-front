@@ -1,20 +1,43 @@
 import { useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 
 
 
-export default function ProdutoCarrinho({nome, cor, preco, imagem, deletarProduto}){
 
+export default function ProdutoCarrinho({name, cor, price, image, gettingCart, id}){
+
+    const BASE_URL = `http://localhost:5000`;
+
+    function deleteProduct(){
+        const auth = JSON.parse(localStorage.getItem('weardo'));
+        const header = {
+            headers: {
+              Authorization: `Bearer ${auth.token}`,
+              id: id
+            }
+          }
+        const promise = axios.delete(`${BASE_URL}/cart`, header);
+        return promise;
+      };
+    
+    async function deleteCartProduct(){
+        await deleteProduct().then(()=>{
+            gettingCart();
+        }).catch(res=>{
+            console.log(res.data);
+        })
+    }
     
     return(
         <Produto>
-            <img src={imagem} />
+            <img src={image} />
             <Descricao>
-                <h1>{nome}</h1>
+                <h1>{name}</h1>
                 <h4>cor: {cor}</h4>
-                <h2>R$: {parseInt(preco)/100}</h2>
+                <h2>R$: {parseInt(price)/100}</h2>
             </Descricao>
-            <ion-icon onClick={()=> deletarProduto(nome)} name="trash-outline"></ion-icon>
+            <ion-icon onClick={()=> deleteCartProduct()} name="trash-outline"></ion-icon>
         </Produto>
     )
 }

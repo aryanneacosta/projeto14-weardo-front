@@ -29,7 +29,7 @@ export default function SingIn() {
         console.log(r);
         localStorage.setItem(
           "weardo",
-          JSON.stringify({ token: r.data.token, name: r.data.name })
+          JSON.stringify({ token: r.data.token, name: r.data.name, address: r.data.address, email: r.data.email })
         );
         navigate(`/principal`);
       })

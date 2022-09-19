@@ -13,7 +13,10 @@ export default function ToPayment({total}){
             <h3>{total}</h3>
             </div>
 
-            <Button onClick={()=>navigate("/pagamento")}>
+            <Button onClick={()=>{
+                if(total === 0){
+                    return alert("Você ainda não possui produtos no carrinho");
+                }else return navigate("/pagamento");}}>
                 <h6>Ir para o pagamento</h6>
             </Button>
         </Footer>

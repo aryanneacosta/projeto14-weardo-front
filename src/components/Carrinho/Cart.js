@@ -4,68 +4,42 @@ import ProdutoCarrinho from "./CartProduct";
 import { useEffect, useState } from "react";
 import ToPayment from "./ToPayments";
 import { useNavigate } from "react-router-dom";
-import { Top, Endereco } from "../StylesCart";
+import { Top, Endereco, ShowProducts } from "../StylesCart";
+import { getCartProducts} from "../../services/Services";
 
 export default function Cart(){
 
     const navigate = useNavigate();
 
     const [total, setTotal] = useState(0);
-    const [produtosSelecionados, setProdutosSelecionados] = useState([
-        {
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin1 - Safra boa ein",
-            preco: "1999"
-        },{
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin2 - Safra boa ein",
-            preco: "1999"
-        },{
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin3 - Safra boa ein",
-            preco: "1999"
-        },{
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin4 - Safra boa ein",
-            preco: "1999"
-        },{
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin5 - Safra boa ein",
-            preco: "1999"
-        },{
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin6 - Safra boa ein",
-            preco: "1999"
-        },{
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin7 - Safra boa ein",
-            preco: "1999"
-        },{
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin8 - Safra boa ein",
-            preco: "1999"
-        }
-    ]);
+    const [produtosSelecionados, setProdutosSelecionados] = useState([]);
+    const auth = JSON.parse(localStorage.getItem('weardo'));
 
-    function deletarProduto(nome){
-        const aux = produtosSelecionados.filter(value => value.nome !== nome);
-        setProdutosSelecionados(aux);
+
+    async function gettingCart(){
+        await getCartProducts().then(res=>{
+            setProdutosSelecionados(res.data);
+        }).catch(res=>{
+            console.log(res.data);
+        })
     }
+
+    useEffect(()=>{
+        gettingCart();
+    }, [])
+
+    
+ 
     function somarTotal(){
         let aux=0;
-        produtosSelecionados.map(value => aux += parseInt(value.preco))
+        produtosSelecionados.map(value => aux += parseInt(value.price))
         setTotal(aux/100)
     }
 
     useEffect(somarTotal, [produtosSelecionados]);
+    console.log(auth);
+    console.log(produtosSelecionados);
+    console.log({email: auth.email});
 
     return(
         <>
@@ -78,17 +52,18 @@ export default function Cart(){
         </Top>
         <Endereco>
             <h3>Entregar em:</h3>
-            <h3>Endereço legal que a pessoa tem</h3>
+            <h3>{auth.address}</h3>
         </Endereco>
         <ShowProducts>
-        { produtosSelecionados.map((value, index) => <ProdutoCarrinho
+        { produtosSelecionados.length > 0 ? produtosSelecionados.map((value, index) => <ProdutoCarrinho
             key={index}
-            nome={value.nome}
+            name={value.name}
             cor ={value.cor}
-            preco ={value.preco}
-            imagem = {value.imagem}
-            deletarProduto={deletarProduto}
-        /> )}
+            price ={value.price}
+            image = {value.image}
+            id = {value.id}
+            gettingCart={gettingCart}
+        /> ): <p>Você ainda não possui produtos em seu carrinho</p>}
         </ShowProducts>
 
         <ToPayment total={total}/>
@@ -97,11 +72,6 @@ export default function Cart(){
     )
 }
 
-const ShowProducts = styled.div`
-    box-sizing: border-box;
-    width: 100vw;
-    height: 67vh;
-    overflow-y: scroll;
-`
+
 
 

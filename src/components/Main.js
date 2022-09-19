@@ -3,8 +3,11 @@ import styled from "styled-components";
 import { getProducts, postProducts } from "../services/Services";
 import ecommerce from '../assets/images/ecommerce.png';
 import banner from '../assets/images/banner.png';
+import { useNavigate } from "react-router-dom";
+import { Endereco } from "./StylesCart";
 
 export default function Main() {
+    const navigate = useNavigate();
     const [productsList, setProductsList] = useState([]);
     const auth = JSON.parse(localStorage.getItem('weardo'));
     let newProductsList = [];
@@ -46,15 +49,18 @@ export default function Main() {
         <Content>
             <Header>
                 <Welcome>
-                    <img src={ecommerce} alt='logo'/>
+                    <img onClick={()=> { navigate("/");localStorage.clear();}} src={ecommerce} alt='logo'/>
                     Bem vindo(a),
                     <div>{auth.name}</div>
                     !
                 </Welcome>
                 <Cart>
-                    <ion-icon name="cart-outline"></ion-icon>
+                    <ion-icon onClick={()=> navigate("/carrinho")} name="cart-outline"></ion-icon>
                 </Cart>
             </Header>
+            <Titulo onClick={()=> { navigate("/vendidos")}}>
+                <h3>Histórico de Compra</h3>
+            </Titulo>
             <Poster>
                 <img src={banner} alt="poster" />
             </Poster>
@@ -75,9 +81,18 @@ export default function Main() {
                     );
                 })}
             </Products>
+
         </Content>
     )
 }
+
+const Titulo = styled(Endereco)`
+    justify-content: center;
+    margin-top: 50px;
+    border-top: 1px solid #F0F2F1;
+    cursor:pointer;
+`
+
 
 const Content = styled.div`
     display: flex;
@@ -103,6 +118,7 @@ const Header = styled.div`
         height: 28px;
         width: 28px;
         margin-right: 20px;
+        cursor: pointer;
     }
 `;
 
@@ -124,6 +140,7 @@ const Welcome = styled.div`
 
     img {
         height: 28px;
+        cursor: pointer;
     }
 `;
 
@@ -135,7 +152,6 @@ const Poster = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 40px;
 
     img {
         height: 144px;
@@ -212,4 +228,5 @@ const Button = styled.div`
     font-size: 12px;
     color: var(--color-background);
     font-family: 'Inter';
+    cursor: pointer;
 `;

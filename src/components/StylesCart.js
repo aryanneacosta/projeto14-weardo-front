@@ -82,5 +82,47 @@ const Button = styled.span`
         color: #FFFFFF;
     }
 `
+const ResumoCompra = styled.div`
+    width: 100vw;
+    height: auto;
+    box-sizing: border-box;
+    padding: 5vw;
 
-export {Top, Endereco, Button};
+    h3{ 
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 19px;
+        color: #393F42;
+        text-align: start;
+
+    }
+    h4{
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 19px;
+        color: #393F42;
+        margin-bottom: 5vw;
+    }
+`
+const ShowProducts = styled.div`
+    box-sizing: border-box;
+    width: 100vw;
+    height: 67vh;
+    overflow-y: scroll;
+    p{
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 15px;
+        color: #393F42;
+        text-align: center;
+        margin-top: 15vw;
+    }
+`
+
+export {Top, Endereco, Button, ResumoCompra, ShowProducts};

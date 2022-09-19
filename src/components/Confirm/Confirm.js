@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { Top, Endereco, Button} from "../StylesCart";
+import { Top, Endereco, Button, ResumoCompra} from "../StylesCart";
 import { useState, useEffect, useReducer } from "react";
+import { getCartProducts, postBuy, deleteCart } from "../../services/Services";
 
 function reducer(state, action){
     if(action.type === "dinheiro"){
@@ -18,68 +19,57 @@ export default function Confirm(){
     const [nomesProdutos, setNomesProdutos] = useState("");
     const [total, setTotal] = useState(0);
     const [state, dispatch] = useReducer(reducer, 0);
-    const [produtosSelecionados, setProdutosSelecionados] = useState([
-        {
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin1, Safra boa ein",
-            preco: "1999"
-        },{
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin2, Safra boa ein",
-            preco: "1999"
-        },{
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin3, Safra boa ein",
-            preco: "1999"
-        },{
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin4, Safra boa ein",
-            preco: "1999"
-        },{
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin5, Safra boa ein",
-            preco: "1999"
-        },{
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin6, Safra boa ein",
-            preco: "1999"
-        },{
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin7, Safra boa ein",
-            preco: "1999"
-        },{
-            imagem: "https://f053de585b6c01c63f45-a7e947795f10d175ce7168574ff7ba2a.ssl.cf1.rackcdn.com/GaleriaImagem/121311/fotografia-produto-fundo-branco_orla-produto-35.jpg",
-            cor: "vermelha",
-            nome: "Vinzin8, Safra boa ein",
-            preco: "1999"
-        }
-    ]);
+    const [produtosSelecionados, setProdutosSelecionados] = useState([]);
+    const auth = JSON.parse(localStorage.getItem('weardo'));
+
+    function gettingCart(){
+        getCartProducts().then(res=>{
+            setProdutosSelecionados(res.data);
+        }).catch(res=>{
+            console.log(res.data);
+        })
+    }
+
+    useEffect(()=>{
+        gettingCart();
+    }, []);
 
     function somarTotal(){
         let aux=0;
-        produtosSelecionados.map(value => aux += parseInt(value.preco))
+        produtosSelecionados.map(value => aux += parseInt(value.price))
         setTotal(aux/100)
     }
     function enfileirarNomes(){
         let aux = ""
-        produtosSelecionados.map(value=> aux += `${value.nome} - `);
+        produtosSelecionados.map(value=> aux += `${value.name} - `);
         setNomesProdutos(aux);
     }
-    function ConfirmarPedido(){
+
+    function confirmarPedido(){
+        const body = {
+            name: auth.name,
+            address: auth.address,
+            products: produtosSelecionados,
+            buyWay: state,
+            total: total,
+            email: auth.email
+        }
+        postBuy(body).then(()=> {
+            
+            deleteCart().then(()=> 
+            navigate("/principal")
+            ).catch(res=> console.log(res.data));
+            alert("Compra concluída"); 
+            
+
+        }).catch(res=> console.log(res.data));
 
 
     }
 
-    useEffect(somarTotal, []);
-    useEffect(enfileirarNomes,[]);
-    console.log(state);
+    useEffect(somarTotal, [produtosSelecionados]);
+    useEffect(enfileirarNomes,[produtosSelecionados]);
+    console.log(produtosSelecionados);
 
     return(
         <>
@@ -96,32 +86,27 @@ export default function Confirm(){
         </Titulo>
 
         <ResumoCompra>
-        <h3>Nome:</h3><h4>Belo nome da pessoa</h4>
+        <h3>Nome:</h3><h4>{auth.name}</h4>
 
-        <h3>Endereço:</h3><h4>Belo endereço da pessoa</h4>
+        <h3>Endereço:</h3><h4>{auth.address}</h4>
 
         <h3>Produtos:</h3><h4>{nomesProdutos}</h4>
 
         <h3>Total:</h3><h4>{total}</h4>
 
-        
-        <form onSubmit={ConfirmarPedido}>
+        <Formulario>
         <h3>Forma de pagamento:</h3>
         <input type="radio" onClick={()=> dispatch({type:"dinheiro"})} id="dinheiro" name="tipo_pagamento" value="dinheiro"/>
-        <label htmlFor="dinheiro">Dinheiro</label><br/>
+        <label htmlFor="dinheiro">Dinheiro (na entrega)</label><br/>
         <input type="radio" onClick={()=> dispatch({type:"cartao"})} id="cartão" name="tipo_pagamento" value="cartão"/>
-        <label htmlFor="cartão">Cartão</label><br/>
+        <label htmlFor="cartão">Cartão (na entrega)</label><br/>
         <input type="radio" onClick={()=> dispatch({type:"pix"})} id="pix" name="tipo_pagamento" value="pix"/>
         <label htmlFor="pix">Pix</label>
-        <Button type="submit">
+        <ConfirmButton onClick={confirmarPedido} type="submit">
         <h6>Confirmar compra</h6>
-        </Button>
-        </form> 
-
-
-
+        </ConfirmButton>
+        </Formulario>
         </ResumoCompra>
-
         </>
     )
 }
@@ -133,23 +118,15 @@ const ConfirmButton = styled(Button)`
     margin-top: 5vw;
 `
 
-const ResumoCompra = styled.div`
-    width: 100vw;
-    height: auto;
-    box-sizing: border-box;
-    padding: 5vw;
 
-    h3{ 
-        font-family: 'Inter';
-        font-style: normal;
-        font-weight: 700;
-        font-size: 18px;
-        line-height: 19px;
-        color: #393F42;
-        text-align: start;
-
+const Formulario = styled.form`
+    input{
+        width: 20px;
+        height: 20px;
     }
-    h4{
+
+
+    label{
         font-family: 'Inter';
         font-style: normal;
         font-weight: 500;
