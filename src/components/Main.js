@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getProducts } from "../services/Services";
+import { getProducts, postProducts } from "../services/Services";
 import ecommerce from '../assets/images/ecommerce.png';
 import banner from '../assets/images/banner.png';
 
@@ -19,7 +19,7 @@ export default function Main() {
         }).catch(resposta => {
             console.log(resposta.data);
         })
-    }
+    };
 
     decimalSeparator(productsList);
     
@@ -28,7 +28,19 @@ export default function Main() {
             item.price = (parseInt(item.price)/100).toFixed(2);
         })
         return newProductsList = arr;
-    }
+    };
+
+    async function addToCart(id) {
+        const body = {
+            name: auth.name,
+            id: id
+        }
+        await postProducts(body).then(resposta => {
+            console.log(resposta.data);
+        }).catch(resposta => {
+            console.log(resposta.data);
+        })
+    };
 
     return (
         <Content>
@@ -39,7 +51,9 @@ export default function Main() {
                     <div>{auth.name}</div>
                     !
                 </Welcome>
-                <ion-icon name="cart-outline"></ion-icon>
+                <Cart>
+                    <ion-icon name="cart-outline"></ion-icon>
+                </Cart>
             </Header>
             <Poster>
                 <img src={banner} alt="poster" />
@@ -56,9 +70,9 @@ export default function Main() {
                                 <h2>{products.name}</h2>
                             </ProductName>
                             <h3>R$ {products.price}</h3>
-                            <Button>Adicionar ao carrinho</Button>
+                            <Button onClick={() => addToCart(products.id)}>Adicionar ao carrinho</Button>
                         </Product>
-                    )
+                    );
                 })}
             </Products>
         </Content>
@@ -112,6 +126,8 @@ const Welcome = styled.div`
         height: 28px;
     }
 `;
+
+const Cart = styled.div``;
 
 const Poster = styled.div`
     height: 163px;
