@@ -28,4 +28,9 @@ function getProducts() {
   return promise;
 }
 
-export { singin, singup, getProducts };
+function postProducts(body) {
+  const promise = axios.post(`${BASE_URL}/products`, body);
+  return promise;
+}
+
+export { singin, singup, getProducts, postProducts };
