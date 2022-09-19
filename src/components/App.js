@@ -38,18 +38,16 @@ export default function App() {
             <Route 
               path="/carrinho" 
               element={
-                /*<PrivatePage>
+                <PrivatePage>
                   <Cart/>
-                </PrivatePage>*/
-                <Cart/>
+                </PrivatePage>
                 }/>
             <Route 
               path="/pagamento" 
               element={
-                /*<PrivatePage>
+                <PrivatePage>
                   <Confirm/>
-                </PrivatePage>*/
-                <Confirm/>
+                </PrivatePage>
                 }/>
           </Routes>
         </BrowserRouter>

@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import { useNavigate } from "react-router-dom"
+import { Button } from "../StylesCart";
 
 export default function ToPayment({total}){
 
@@ -13,7 +14,7 @@ export default function ToPayment({total}){
             </div>
 
             <Button onClick={()=>navigate("/pagamento")}>
-                <p>Ir para o pagamento</p>
+                <h6>Ir para o pagamento</h6>
             </Button>
         </Footer>
         </>
@@ -55,29 +56,3 @@ const Footer = styled.div`
 
 `
 
-const Button = styled.span`
-    width: 70vw;
-    height: 10vw;
-    min-height: 20px;
-    background-color: #67C4A7;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 5vw;
-    transition: all 0.5s;
-
-    &:active{
-        transform: scale(0.9);
-    }
-    p{
-        font-family: 'Inter';
-        font-style: normal;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 17px;
-        color: #FFFFFF;
-    }
-`
