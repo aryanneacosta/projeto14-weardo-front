@@ -7,6 +7,9 @@ import { UserContext } from "./Context";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PrivatePage from "../services/PrivatePage";
 import Main from "./Main";
+import Cart from "./Carrinho/Cart";
+import Confirm from "./Confirm/Confirm";
+import Solds from "./solds/solds";
 
 export default function App() {
   const [tokens, setTokens] = useState(false);
@@ -33,6 +36,27 @@ export default function App() {
                 </PrivatePage>
               }
             />
+            <Route 
+              path="/carrinho" 
+              element={
+                <PrivatePage>
+                  <Cart/>
+                </PrivatePage>
+                }/>
+            <Route 
+              path="/pagamento" 
+              element={
+                <PrivatePage>
+                  <Confirm/>
+                </PrivatePage>
+                }/>
+            <Route 
+              path="/vendidos" 
+              element={
+                <PrivatePage>
+                  <Solds/>
+                </PrivatePage>
+                }/>
           </Routes>
         </BrowserRouter>
       </UserContext.Provider>
