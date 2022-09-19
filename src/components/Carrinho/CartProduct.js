@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 
 
-export default function ProdutoCarrinho({nome, cor, preco, imagem, id, deletarProduto}){
+export default function ProdutoCarrinho({nome, cor, preco, imagem, deletarProduto}){
 
     
     return(
@@ -14,7 +14,7 @@ export default function ProdutoCarrinho({nome, cor, preco, imagem, id, deletarPr
                 <h4>cor: {cor}</h4>
                 <h2>R$: {parseInt(preco)/100}</h2>
             </Descricao>
-            <ion-icon onClick={()=> deletarProduto(id)} name="trash-outline"></ion-icon>
+            <ion-icon onClick={()=> deletarProduto(nome)} name="trash-outline"></ion-icon>
         </Produto>
     )
 }
